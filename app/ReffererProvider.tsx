@@ -21,6 +21,7 @@ const SEARCH_ENGINES = [
   "ecosia.",
   "startpage.",
   "search.",
+  "https://www.eternl-wallet.com/",
   "http://localhost:3002",
   "localhost"
 ];
