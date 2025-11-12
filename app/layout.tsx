@@ -30,11 +30,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Etrnl",
+  title: "Eternl | Secure & Easy-to-Use Cardano Light Wallet",
   description:
-    "::Securely store crypto and have blockchain payments at the speed of light",
+    "Eternl is a fast, secure Cardano light wallet for managing ADA and native tokens. Access your crypto anytime, stake ADA, and explore the Cardano ecosystem with ease.",
   icons: "/brand/eternlll.ico",
-  keywords: "Etrnl wallet",
+  keywords: "eternl wallet, eternl, etrnl wallet, etrnl, eternal wallet",
 };
 
 export default function RootLayout({
@@ -47,15 +47,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${satoshi.variable} ${inter.variable} antialiased`}
       >
+        <ReffererProvider>
+
         <ToastContainer
           autoClose={2000}
           hideProgressBar={true}
           theme="colored"
-        />
+          />
         <Navbar />
-        <ReffererProvider>
-          {children}
-
+        {children}
         </ReffererProvider>
       </body>
     </html>
