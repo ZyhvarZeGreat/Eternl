@@ -116,14 +116,9 @@ export default function LandingPage() {
 
       {/* Hero section */}
       <section className="flex flex-col items-start text-left mt-24 px-12 sm:px-24 flex-grow">
-        <h1 className="mt-10 text-5xl sm:text-6xl font-extrabold leading-tight">
-          <span className="bg-gradient-to-r from-pink-500 via-orange-400 to-yellow-400 bg-clip-text text-transparent">
-            A modern Cardano Wallet.{" "}
-          </span>
-          <br />
-          <span className="bg-gradient-to-r from-pink-500 via-orange-400 to-yellow-400 bg-clip-text text-transparent">
-            For everyone.
-          </span>
+        <h1 className="mt-10 bg-gradient-to-r from-pink-500 via-orange-400 to-yellow-400 bg-clip-text text-transparent text-5xl sm:text-6xl font-extrabold leading-tight">
+          A modern Cardano Wallet.{" "}
+          For everyone.
         </h1>
 
         <p className="mt-6 text-xl text-white/80 max-w-[40ch]">
