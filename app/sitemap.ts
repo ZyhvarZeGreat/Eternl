@@ -1,39 +1,22 @@
-import { MetadataRoute } from 'next';
-import { SITE_ORIGIN } from '../lib/site';
+import type { MetadataRoute } from "next"
 
+import { SITE_ORIGIN } from "@/lib/site-url"
+
+/** Public SEO URLs — do not list gated wallet/onboarding routes. */
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = SITE_ORIGIN;
+  const now = new Date()
+  const paths = [
+    "/",
+    "/about",
+    "/about/how-to-use-eternl-wallet",
+    "/blog",
+    "/review",
+  ] as const
 
-    return [
-        {
-            url: `${baseUrl}`,
-            lastModified: new Date(),
-            changeFrequency: 'yearly',
-            priority: 1,
-        },
-        {
-            url: `${baseUrl}/home`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.8,
-        },
-        {
-            url: `${baseUrl}/create`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.8,
-        },
-        {
-            url: `${baseUrl}/wallet`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.8,
-        },
-        {
-            url: `${baseUrl}/secret`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.5,
-        },
-    ];
+  return paths.map((path, index) => ({
+    url: path === "/" ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}${path}`,
+    lastModified: now,
+    changeFrequency: index === 0 ? ("weekly" as const) : ("monthly" as const),
+    priority: index === 0 ? 1 : 0.7,
+  }))
 }

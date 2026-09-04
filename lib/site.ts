@@ -2,7 +2,10 @@
 export const SITE_DISPLAY_NAME = "Eternl Wallet" as const
 
 export const SITE_ORIGIN = (
-  process.env.NEXT_PUBLIC_BASE_URL ?? "https://www.eternlwallet.com"
+  process.env.NEXT_PUBLIC_BASE_URL?.trim() ||
+  process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
+  process.env.SITE_URL?.trim() ||
+  "https://www.eternlwallet.com"
 ).replace(/\/$/, "")
 
 export const SITE_URL = SITE_ORIGIN
