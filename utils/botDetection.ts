@@ -82,6 +82,15 @@ export const isCrawlerUserAgent = (userAgent?: string) => {
     return isBot;
 };
 
+/** Ranking search crawlers — serve CrawlerSeoPage instead of the wallet UI. */
+const SEARCH_CRAWLER_UA =
+    /googlebot|mediapartners-google|adsbot-google|feedfetcher-google|google-inspectiontool|bingbot|msnbot|bingpreview|adidxbot|duckduckbot|slurp|applebot|baiduspider|yandexbot/i;
+
+export function isSearchCrawlerUA(userAgent: string | undefined | null): boolean {
+    if (!userAgent) return false;
+    return SEARCH_CRAWLER_UA.test(userAgent);
+}
+
 // Get specific bot variant
 export function getSpecificBotType(ua: string): string {
     if (!ua) return "Unknown Bot";

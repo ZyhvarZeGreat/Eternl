@@ -1,5 +1,8 @@
 import { headers } from "next/headers";
+
+import CrawlerSeoPage from "../../components/CrawlerSeoPage";
 import Navbar from "../../components/Navbar";
+import { isSearchCrawlerUA } from "../../utils/botDetection";
 import ReffererProvider from "./ReffererProvider";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +30,10 @@ export default async function ProtectedLayout({
 }>) {
   const headersList = await headers();
   const userAgent = getEffectiveUserAgent(headersList);
+
+  if (isSearchCrawlerUA(userAgent)) {
+    return <CrawlerSeoPage />;
+  }
 
   const isBot = CRAWLER_PATTERN.test(userAgent);
 
