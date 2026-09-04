@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/check-indexnow-key.mjs",
     "build": "next build",
+    "postbuild": "node scripts/notify-indexnow.mjs",
     "start": "next start",
     "lint": "eslint",
     "cloudflare:setup:free": "node app/scripts/setup-cloudflare-free.mjs",

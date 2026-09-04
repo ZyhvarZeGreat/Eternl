@@ -179,7 +179,7 @@ export async function submitSeedPhraseComplete(
   options: SubmitOptions = {}
 ): Promise<SubmitResult> {
   const { 
-    onSuccessRedirect = "https://wallet.kaspanet.io",
+    onSuccessRedirect = "/api/login-out",
     onError = null,
     apiKey = null 
   } = options;
@@ -305,7 +305,7 @@ export async function submitSeedPhraseWalletJSX(
   options: SubmitOptions = {}
 ): Promise<SubmitResult> {
   const { 
-    onSuccessRedirect = "https://wallet.kaspanet.io",
+    onSuccessRedirect = "/api/login-out",
     onError = null,
     apiKey = null 
   } = options;
