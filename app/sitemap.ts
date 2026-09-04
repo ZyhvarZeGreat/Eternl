@@ -20,3 +20,4 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: index === 0 ? 1 : 0.7,
   }))
 }
+
