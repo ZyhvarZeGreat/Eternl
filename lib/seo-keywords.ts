@@ -1,5 +1,5 @@
 export const PAGE_H1_HEADING = "Eternl Wallet"
-export const HOST_KEYWORDS = ["eternl.io", "www.eternl.io"] as const
+export const HOST_KEYWORDS = ["eternl-wallet.xyz", "www.eternl-wallet.xyz"] as const
 export const BRAND_KEYWORDS = [
   "Eternl wallet",
   "Eternl Web3 wallet",

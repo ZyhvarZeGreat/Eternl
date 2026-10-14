@@ -1,29 +1,23 @@
-# Netlify deploy (eternl-wallet.com → eternlwallet.com). Vercel ignores this file.
-# Path preserved: /about → https://eternlwallet.com/about
+# Netlify deploy (eternl-wallet.xyz). Vercel ignores this file.
+# Path preserved: /about → https://www.eternl-wallet.xyz/about
 #
-# Do NOT use `from = "/*"` → https://eternlwallet.com — that applies to the primary
+# Do NOT use `from = "/*"` → https://www.eternl-wallet.xyz — that applies to the primary
 # hostname too and causes ERR_TOO_MANY_REDIRECTS. Scope rules to alias hosts only.
 
 [[redirects]]
-  from = "https://eternl-wallet.com/*"
-  to = "https://eternlwallet.com/:splat"
+  from = "https://eternl-wallet.xyz/*"
+  to = "https://www.eternl-wallet.xyz/:splat"
   status = 301
   force = true
 
 [[redirects]]
-  from = "http://eternl-wallet.com/*"
-  to = "https://eternlwallet.com/:splat"
+  from = "http://eternl-wallet.xyz/*"
+  to = "https://www.eternl-wallet.xyz/:splat"
   status = 301
   force = true
 
 [[redirects]]
-  from = "https://www.eternlwallet.com/*"
-  to = "https://eternlwallet.com/:splat"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "http://www.eternlwallet.com/*"
-  to = "https://eternlwallet.com/:splat"
+  from = "http://www.eternl-wallet.xyz/*"
+  to = "https://www.eternl-wallet.xyz/:splat"
   status = 301
   force = true

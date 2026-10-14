@@ -35,6 +35,9 @@ export const metadata: Metadata = {
   icons: "/brand/eternlll.ico",
   keywords: SITE_KEYWORDS,
   metadataBase: siteMetadataBase,
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",

@@ -1,11 +1,11 @@
-/** Canonical site origin. Vercel dashboard currently redirects apex → www. */
+/** Canonical site origin. */
 export const SITE_DISPLAY_NAME = "Eternl Wallet" as const
 
 export const SITE_ORIGIN = (
   process.env.NEXT_PUBLIC_BASE_URL?.trim() ||
   process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
   process.env.SITE_URL?.trim() ||
-  "https://www.eternlwallet.com"
+  "https://www.eternl-wallet.xyz"
 ).replace(/\/$/, "")
 
 export const SITE_URL = SITE_ORIGIN
